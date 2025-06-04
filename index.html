@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>P1 Readiness Assessment</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333; 
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .hero { 
+      padding: 3rem 2rem; 
+      text-align: center; 
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      margin: 2rem auto;
+      max-width: 800px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      color: white;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    
+    .user-form {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 600px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .user-form h2 {
+      color: #333;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #555;
+      font-size: 1rem;
+    }
+    
+    .form-group select,
+    .form-group input[type="text"],
+    .form-group input[type="number"] {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    
+    .form-group select:focus,
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-group select {
+      cursor: pointer;
+    }
+    
+    .start-assessment-btn {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 1rem;
+    }
+    
+    .start-assessment-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .start-assessment-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .progress-container {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin: 2rem auto;
+      max-width: 600px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4CAF50, #45a049);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    
+    .progress-text {
+      text-align: center;
+      font-weight: 600;
+      color: #666;
+    }
+    
+    .checklist { 
+      padding: 2rem; 
+      max-width: 1200px; 
+      margin: auto; 
+      display: none;
+    }
+    
+    .filter-tabs {
+      display: none;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-tab {
+      padding: 0.8rem 1.5rem;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .filter-tab.active {
+      background: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .filter-tab.language { color: #0d47a1; }
+    .filter-tab.numeracy { color: #4a148c; }
+    .filter-tab.socio { color: #880e4f; }
+    
+    .checklist-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); 
+      gap: 1.5rem; 
+    }
+    
+    .checklist-item { 
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    
+    .checklist-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+    
+    .checklist-item.correct { 
+      border-color: #4CAF50; 
+      background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+    }
+    
+    .checklist-item.wrong { 
+      border-color: #f44336; 
+      background: linear-gradient(135deg, #fff8f8 0%, #ffeaea 100%);
+    }
+    
+    .checklist-item.missed { 
+      border-color: #ff9800; 
+      background: linear-gradient(135deg, #fffaf0 0%, #ffeaa7 100%);
+    }
+    
+    .item-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .item-text {
+      flex: 1;
+      font-size: 1rem;
+      line-height: 1.5;
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .competency-label { 
+      font-size: 0.75rem; 
+      font-weight: bold; 
+      margin-top: 0.8rem; 
+      display: inline-block; 
+      padding: 4px 12px; 
+      border-radius: 20px; 
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .competency-blue { 
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); 
+      color: #0d47a1; 
+    }
+    
+    .competency-purple { 
+      background: linear-gradient(135deg, #ede7f6 0%, #d1c4e9 100%); 
+      color: #4a148c; 
+    }
+    
+    .competency-pink { 
+      background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); 
+      color: #880e4f; 
+    }
+    
+    .info-btn { 
+      display: none;
+    }
+    
+    .info-text { 
+      display: none; 
+      font-size: 0.9rem; 
+      background: linear-gradient(135deg, #e8f4fd 0%, #d4edda 100%);
+      padding: 1rem; 
+      border-radius: 10px; 
+      margin-top: 1rem;
+      border-left: 4px solid #2196F3;
+      animation: slideDown 0.3s ease;
+    }
+    
+    .info-text.show {
+      display: block;
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .submit-btn { 
+      display: block; 
+      margin: 3rem auto; 
+      padding: 1rem 3rem; 
+      font-size: 1.1rem; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white; 
+      border: none; 
+      border-radius: 50px; 
+      cursor: pointer; 
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    input[type="checkbox"] { display: none; }
+    
+    .custom-checkbox { 
+      width: 30px; 
+      height: 30px; 
+      border: 3px solid #ddd; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      position: relative;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    
+    .custom-checkbox:hover {
+      border-color: #999;
+      transform: scale(1.05);
+    }
+    
+    .custom-checkbox.checked {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      border-color: #4CAF50;
+    }
+    
+    .custom-checkbox.checked::after {
+      content: "✓"; 
+      position: absolute; 
+      color: white; 
+      font-size: 20px; 
+      font-weight: bold;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    .custom-checkbox.missed {
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+      border-color: #ff9800;
+    }
+    
+    .custom-checkbox.missed::after {
+      content: "!"; 
+      position: absolute; 
+      color: white; 
+      font-size: 20px; 
+      font-weight: bold;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    .custom-checkbox.wrong {
+      background: linear-gradient(135deg, #f44336, #d32f2f);
+      border-color: #f44336;
+    }
+    
+    .custom-checkbox.wrong::after {
+      content: "✗"; 
+      position: absolute; 
+      color: white; 
+      font-size: 18px; 
+      font-weight: bold;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    .results-summary {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 800px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+    
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .result-card {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .result-card.correct {
+      background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%);
+      color: #2e7d32;
+    }
+    
+    .result-card.wrong {
+      background: linear-gradient(135deg, #ffeaea 0%, #ffcdd2 100%);
+      color: #c62828;
+    }
+    
+    .result-card.missed {
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      color: #ef6c00;
+    }
+    
+    .result-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .result-label {
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .user-info {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .reset-btn {
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .checklist-grid { 
+        grid-template-columns: 1fr; 
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero {
+        padding: 2rem 1rem;
+        margin: 1rem;
+      }
+      
+      .user-form {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      
+      .checklist-item {
+        padding: 1rem;
+      }
+      
+      .filter-tabs {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .filter-tab {
+        width: 200px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .item-content {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .custom-checkbox {
+        align-self: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>P1 Readiness Assessment</h1>
+      <p>Select the knowledge, skills, and dispositions (KSDs) that are developmentally appropriate for students entering Primary 1.</p>
+    </section>
+
+    <div class="user-form" id="userForm">
+      <h2>Participant Information</h2>
+      <form id="participantForm">
+        <div class="form-group">
+          <label for="role">Role:</label>
+          <select id="role" name="role" required>
+            <option value="">Select your role</option>
+            <option value="SL">SL (School Leader)</option>
+            <option value="KP">KP (Key Personnel)</option>
+            <option value="Teacher">Teacher</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="experience">Years of Experience:</label>
+          <input type="number" id="experience" name="experience" min="0" max="50" placeholder="Enter years of experience" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="zone">Zone:</label>
+          <select id="zone" name="zone" required onchange="updateClusters()">
+            <option value="">Select zone</option>
+            <option value="North">North</option>
+            <option value="South">South</option>
+            <option value="East">East</option>
+            <option value="West">West</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="cluster">Cluster:</label>
+          <select id="cluster" name="cluster" required disabled>
+            <option value="">Select cluster</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="start-assessment-btn">Start Assessment</button>
+      </form>
+    </div>
+
+    <div class="results-summary" id="resultsSummary">
+      <div class="user-info" id="userInfo"></div>
+      <h2 style="text-align: center; margin-bottom: 1rem;">Assessment Results</h2>
+      <div class="results-grid">
+        <div class="result-card correct">
+          <div class="result-number" id="correctCount">0</div>
+          <div class="result-label">Correct</div>
+        </div>
+        <div class="result-card wrong">
+          <div class="result-number" id="wrongCount">0</div>
+          <div class="result-label">Incorrect</div>
+        </div>
+        <div class="result-card missed">
+          <div class="result-number" id="missedCount">0</div>
+          <div class="result-label">Missed</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">0 of 20 items completed</div>
+    </div>
+
+    <section class="checklist" id="checklistSection">
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterItems('all')">All Items</button>
+        <button class="filter-tab language" onclick="filterItems('language')">Language & Literacy</button>
+        <button class="filter-tab numeracy" onclick="filterItems('numeracy')">Numeracy</button>
+        <button class="filter-tab socio" onclick="filterItems('socio')">Socio-Emotional</button>
+      </div>
+      
+      <div class="checklist-grid" id="checklist"></div>
+      <button id="submitBtn" class="submit-btn" onclick="submitChecklist()">Submit Assessment</button>
+    </section>
+  </div>
+
+  <script>
+    const correctAnswers = [2, 3, 4, 5, 7, 8, 11, 15, 16, 17];
+    const blueIDs = [1, 2, 3, 7, 8, 9, 11, 13, 12, 16, 17, 18];
+    const purpleIDs = [4, 5, 6, 10, 14, 19, 20];
+    const pinkIDs = [15];
+    
+    const questions = [
+      "Able to pronounce words accurately",
+      "Participate in everyday conversations",
+      "Ask and respond to simple questions in EL and MTL",
+      "Count up to 10 objects",
+      "Understand numbers up to 100",
+      "Recognise numbers in numerals and words (1 to 10)",
+      "Enjoy reading",
+      "Write words or short phrases (using invented or conventional spelling)",
+      "Listen attentively to short, simple spoken content in MTL related to their daily lives",
+      "Add and subtract numbers",
+      "Understand and follow simple instructions",
+      "Follow communication etiquette such as taking turns, and using appropriate eye contact and volume in conversations or discussions",
+      "Write a simple paragraph of at least 3 sentences to recount appropriately sequenced events",
+      "Tell time to 5 minutes",
+      "Express and share their thoughts and feelings such as happiness, anger, fear and sadness, with peers and adults",
+      "Write his/her own name",
+      "Copy short phrases and demonstrate eye-hand co-ordination while doing so",
+      "Know some letters of the alphabet and their corresponding sounds",
+      "Compare which of two groups has 'more', 'less' or 'same' number of objects within 10",
+      "Understand multiplication and division"
+    ];
+
+    const infoText = {
+      2: "At the start of P1, most students would be able to participate in everyday conversations.",
+      3: "Most students would be able to ask and respond to simple questions.",
+      4: "When children enter primary school, they would have learnt to count some objects.",
+      5: "Most students would have recognised numbers in numerals and words up to 10 from preschool.",
+      7: "Most students would also enjoy listening to stories and reading, with support from adults.",
+      8: "Some use conventional spelling, others invent their spelling. Some may prefer drawing or scribbling.",
+      11: "Most students would be able to understand and follow simple verbal instructions.",
+      15: "Students can express themselves through facial expressions, body language, gestures, drawings, or other creative means.",
+      16: "Most students would be able to write their own name and copy short phrases.",
+      17: "Children are still developing physical readiness like fine motor and hand-eye coordination."
+    };
+
+    let currentFilter = 'all';
+    let userInfo = {};
+
+    // Cluster data for each zone
+    const clusterData = {
+      'North': ['1', '2', '3', '4', '5', '6', '7'],
+      'South': ['1', '2', '3', '4', '5', '6', '7'],
+      'East': ['1', '2', '3', '4', '5', '6', '7'],
+      'West': ['1', '2', '3', '4', '5', '6', '7']
+    };
+
+    // Update clusters based on selected zone
+    function updateClusters() {
+      const zoneSelect = document.getElementById('zone');
+      const clusterSelect = document.getElementById('cluster');
+      const selectedZone = zoneSelect.value;
+      
+      // Clear existing cluster options
+      clusterSelect.innerHTML = '<option value="">Select cluster</option>';
+      
+      if (selectedZone && clusterData[selectedZone]) {
+        // Enable cluster dropdown
+        clusterSelect.disabled = false;
+        
+        // Add cluster options for selected zone
+        clusterData[selectedZone].forEach(cluster => {
+          const option = document.createElement('option');
+          option.value = cluster;
+          option.textContent = cluster;
+          clusterSelect.appendChild(option);
+        });
+      } else {
+        // Disable cluster dropdown if no zone selected
+        clusterSelect.disabled = true;
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('participantForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Collect user information
+      userInfo = {
+        role: document.getElementById('role').value,
+        experience: document.getElementById('experience').value,
+        zone: document.getElementById('zone').value,
+        cluster: document.getElementById('cluster').value
+      };
+      
+      // Hide form and show checklist
+      document.getElementById('userForm').style.display = 'none';
+      document.getElementById('checklistSection').style.display = 'block';
+      
+      // Initialize checklist
+      initializeChecklist();
+    });
+
+    function initializeChecklist() {
+      const checklistContainer = document.getElementById("checklist");
+      
+      questions.forEach((text, index) => {
+        const id = index + 1;
+        const div = document.createElement("div");
+        div.className = "checklist-item";
+        div.setAttribute("data-id", id);
+        
+        // Determine competency type
+        let competencyType = '';
+        if (blueIDs.includes(id)) competencyType = 'language';
+        else if (purpleIDs.includes(id)) competencyType = 'numeracy';
+        else if (pinkIDs.includes(id)) competencyType = 'socio';
+        
+        div.setAttribute("data-competency", competencyType);
+        
+        div.innerHTML = `
+          <div class="item-content">
+            <div class="custom-checkbox" onclick="toggleCheck(this, ${id})" id="custom-box-${id}"></div>
+            <div class="item-text" onclick="toggleCheck(document.getElementById('custom-box-${id}'), ${id})">${text}</div>
+          </div>
+          <div class="competency-label" id="label-${id}" style="display:none;"></div>
+          <div class="info-text" id="info-${id}">${infoText[id] || ""}</div>
+          <input type="checkbox" id="item${id}" data-id="${id}">
+        `;
+        
+        checklistContainer.appendChild(div);
+      });
+      
+      updateProgress();
+    }
+
+    function toggleCheck(el, id) {
+      const checkbox = document.getElementById(`item${id}`);
+      checkbox.checked = !checkbox.checked;
+      el.classList.toggle("checked", checkbox.checked);
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const checkboxes = document.querySelectorAll("input[type='checkbox']");
+      const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+      const totalCount = checkboxes.length;
+      const percentage = (checkedCount / totalCount) * 100;
+      
+      document.getElementById("progressFill").style.width = percentage + "%";
+      document.getElementById("progressText").textContent = `${checkedCount} of ${totalCount} items selected`;
+      
+      if (checkedCount > 0) {
+        document.getElementById("progressContainer").style.display = "block";
+      }
+    }
+
+    function filterItems(type) {
+      currentFilter = type;
+      const items = document.querySelectorAll(".checklist-item");
+      const tabs = document.querySelectorAll(".filter-tab");
+      
+      // Update active tab
+      tabs.forEach(tab => tab.classList.remove("active"));
+      event.target.classList.add("active");
+      
+      // Filter items
+      items.forEach(item => {
+        const competency = item.getAttribute("data-competency");
+        if (type === 'all' || competency === type) {
+          item.style.display = "block";
+        } else {
+          item.style.display = "none";
+        }
+      });
+    }
+
+    function submitChecklist() {
+      const checkboxes = document.querySelectorAll("input[type='checkbox']");
+      const submitBtn = document.getElementById("submitBtn");
+      
+      let correctCount = 0, wrongCount = 0, missedCount = 0;
+      
+      checkboxes.forEach((box) => {
+        const id = parseInt(box.dataset.id);
+        const isChecked = box.checked;
+        const item = box.closest(".checklist-item");
+        const customBox = document.getElementById(`custom-box-${id}`);
+        const label = document.getElementById(`label-${id}`);
+        const isCorrect = correctAnswers.includes(id);
+
+        item?.classList.remove("correct", "wrong", "missed");
+        customBox?.classList.remove("checked", "missed", "wrong");
+
+        const infoTextEl = document.getElementById(`info-${id}`);
+
+        if (isChecked && isCorrect) {
+          item?.classList.add("correct");
+          customBox?.classList.add("checked");
+          if (infoTextEl && infoText[id]) infoTextEl.classList.add("show");
+          correctCount++;
+        } else if (!isChecked && isCorrect) {
+          item?.classList.add("missed");
+          customBox?.classList.add("missed");
+          if (infoTextEl && infoText[id]) infoTextEl.classList.add("show");
+          missedCount++;
+        } else if (isChecked && !isCorrect) {
+          item?.classList.add("wrong");
+          customBox?.classList.add("wrong");
+          wrongCount++;
+        }
+
+        // Show competency labels
+        label.style.display = "inline-block";
+        label.textContent = "";
+        label.className = "competency-label";
+        if (blueIDs.includes(id)) {
+          label.textContent = "Language & Literacy";
+          label.classList.add("competency-blue");
+        }
+        if (purpleIDs.includes(id)) {
+          label.textContent = "Numeracy";
+          label.classList.add("competency-purple");
+        }
+        if (pinkIDs.includes(id)) {
+          label.textContent = "Socio-Emotional";
+          label.classList.add("competency-pink");
+        }
+      });
+
+      // Display user information in results
+      document.getElementById("userInfo").innerHTML = `
+        <strong>Participant:</strong> ${userInfo.role} | 
+        <strong>Experience:</strong> ${userInfo.experience} years | 
+        <strong>Zone:</strong> ${userInfo.zone} | 
+        <strong>Cluster:</strong> ${userInfo.cluster}
+      `;
+
+      // Show results
+      document.getElementById("correctCount").textContent = correctCount;
+      document.getElementById("wrongCount").textContent = wrongCount;
+      document.getElementById("missedCount").textContent = missedCount;
+      document.getElementById("resultsSummary").style.display = "block";
+      
+      // Show filter tabs after submission
+      document.querySelector(".filter-tabs").style.display = "flex";
+      
+      // Hide submit button and disable interactions
+      submitBtn.style.display = "none";
+      const boxes = document.querySelectorAll('[id^="custom-box-"]');
+      boxes.forEach(box => {
+        box.style.pointerEvents = 'none';
+      });
+      
+      // Reset filter to show all items
+      filterItems('all');
+      
+      // Scroll to results (now at top)
+      document.getElementById("resultsSummary").scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
